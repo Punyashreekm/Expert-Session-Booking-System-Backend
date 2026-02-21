@@ -1,6 +1,7 @@
 # Real-Time Expert Session Booking System
 
 Monorepo with:
+
 - `backend`: Node.js + Express + MongoDB APIs
 - `frontend`: React (Vite) + Redux Toolkit RTK Query + shadcn-style UI components
 
@@ -19,6 +20,15 @@ Monorepo with:
    - `npm run dev`
 
 Backend runs at `http://localhost:5500`.
+
+### Troubleshooting MongoDB timeout
+
+If you see `Operation "experts.find()" buffering timed out after 10000ms`:
+
+- Verify `MONGODB_URI` points to a reachable database.
+- For MongoDB Atlas, add your current IP in Network Access and ensure the DB user has read/write permissions.
+- Prefer a URI with a DB name, for example: `mongodb+srv://<user>:<pass>@cluster.mongodb.net/expert-booking?retryWrites=true&w=majority`.
+- Restart backend after updating `.env`.
 
 ## Frontend Setup
 
