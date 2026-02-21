@@ -1,5 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
+mongoose.set("bufferCommands", false);
 
 const app = require("./app");
 const connectDB = require("./config/db");

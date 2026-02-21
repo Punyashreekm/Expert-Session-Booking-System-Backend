@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 
 const expertRoutes = require('./routes/expertRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
@@ -13,7 +14,26 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
+  const stateMap = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting'
+  };
+
+  res.status(200).json({
+    status: 'ok',
+    database: stateMap[mongoose.connection.readyState] || 'unknown',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.use('/api', (req, res, next) => {
+  if (req.path === '/health') return next();
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ message: 'Database unavailable. Please retry.' });
+  }
+  return next();
 });
 
 app.use('/api/experts', expertRoutes);
